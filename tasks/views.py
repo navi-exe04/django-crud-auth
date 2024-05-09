@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-# from django.http import HttpResponse
+from django.http import HttpResponse
 # permite establecer un formulario para crear un user
 from django.contrib.auth.forms import UserCreationForm
 # podemos importar el modelo user que se usa en el form
@@ -46,7 +46,7 @@ def signup(request):
             except IntegrityError:
                 return render(request, SINGUP_VIEW_NAME, {
                     'form': UserCreationForm,
-                    'error': 'User alreadys exists'
+                    'error': 'User already exists'
                 })
 
         return render(request, SINGUP_VIEW_NAME, {
@@ -60,3 +60,7 @@ def tasks(request):
         Return the tasks view
     """
     return render(request, TASKS_VIEW_NAME)
+
+
+def logout(request):
+    return HttpResponse('Logout done')
