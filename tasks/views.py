@@ -1,9 +1,17 @@
-from django.shortcuts import render
-from django.http import HttpResponse
+from django.shortcuts import render, redirect
+# from django.http import HttpResponse
 # permite establecer un formulario para crear un user
 from django.contrib.auth.forms import UserCreationForm
 # podemos importar el modelo user que se usa en el form
 from django.contrib.auth.models import User
+# podemos importar la libreria login para que python cree las cookies necesarias en nuestro navegador
+from django.contrib.auth import login
+# podemos importar los errores que pueda surgir
+from django.db import IntegrityError
+
+# constants
+SINGUP_VIEW_NAME = "signup.html"
+TASKS_VIEW_NAME = "tasks.html"
 
 # Create your views here.
 
@@ -21,7 +29,7 @@ def signup(request):
         method: POST - Verify the user information and create the user in DB
     """
     if request.method == 'GET':
-        return render(request, 'signup.html', {
+        return render(request, SINGUP_VIEW_NAME, {
             'form': UserCreationForm
         })
     else:
@@ -33,8 +41,22 @@ def signup(request):
                     password=request.POST['password1']
                 )
                 user.save()
-                return HttpResponse('User created successfully')
-            except:
-                return HttpResponse('Username already exists')
+                login(request, user)  # guarda las cookies del usuario
+                return redirect('tasks')
+            except IntegrityError:
+                return render(request, SINGUP_VIEW_NAME, {
+                    'form': UserCreationForm,
+                    'error': 'User alreadys exists'
+                })
 
-        return HttpResponse('Password do not match')
+        return render(request, SINGUP_VIEW_NAME, {
+            'form': UserCreationForm,
+            'error': 'Passwords do not match'
+        })
+
+
+def tasks(request):
+    """
+        Return the tasks view
+    """
+    return render(request, TASKS_VIEW_NAME)
