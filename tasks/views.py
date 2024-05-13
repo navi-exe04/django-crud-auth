@@ -1,3 +1,4 @@
+from django.utils import timezone
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 # permite establecer un formulario para crear o autenticar un user
@@ -116,16 +117,20 @@ def task_detail(request, id):
             })
 
 
+def complete_task(request, id):
+    task = get_object_or_404(Tasks, pk=id, user=request.user)
+    if request.method == 'POST':
+        task.datecompleted = timezone.now()
+        task.save()
+        return redirect('tasks')
+
+
 def delete_task(request, id):
-    try:
-        # Obtain the task to delete
-        task = Tasks.objects.filter(id=id)
+    # Obtain the task to delete
+    task = get_object_or_404(Tasks, pk=id, user=request.user)
+    if request.method == 'POST':
         task.delete()  # delete the task
         return redirect('tasks')
-    except Tasks.DoesNotExist:
-        return HttpResponse('La task no existe en la BD')
-    except Exception as e:
-        return HttpResponse('Ocurrio un error')
 
 
 def signout(request):

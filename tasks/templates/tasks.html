@@ -12,7 +12,14 @@
             <p>{{task.user.username}}</p>
         </a>
         <div>
-            <a href="{% url 'delete_task' task.id %}">Delete task</a>
+            <form action="{% url 'complete_task' task.id %}" method="post">
+                {% csrf_token %}
+                <button>Complete</button>
+            </form>
+            <form action="{% url 'delete_task' task.id %}" method="post">
+                {% csrf_token %}
+                <button>Delete</button>
+            </form>
         </div>
     </li>
     {% endfor %}
