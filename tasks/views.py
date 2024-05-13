@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 # permite establecer un formulario para crear o autenticar un user
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
@@ -73,12 +73,10 @@ def tasks(request):
 
 def create_task(request):
     if request.method == "GET":
-        print('GET METHOD')
         return render(request, 'create_task.html', {
             'form': TaskForm()
         })
     else:
-        print('POST METHOD')
         try:
             form = TaskForm(request.POST)
             print('Form: ', form)
@@ -92,6 +90,29 @@ def create_task(request):
             return render(request, 'create_task.html', {
                 'form': TaskForm(),
                 'error': 'Please provide valid data'
+            })
+
+
+def task_detail(request, id):
+    # obtain the task from db
+    task = get_object_or_404(Tasks, pk=id, user=request.user)
+    if request.method == 'GET':
+        # define the form with the task information
+        form = TaskForm(instance=task)
+        return render(request, 'task_detail.html', {
+            'task': task,
+            'form': form
+        })
+    else:
+        try:
+            form = TaskForm(request.POST, instance=task)
+            form.save()  # saves the new task date
+            return redirect('tasks')
+        except ValueError:
+            return render(request, 'task_detail.html', {
+                'task': task,
+                'form': form,
+                'error': "Somethings wrong"
             })
 
 

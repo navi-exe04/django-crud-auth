@@ -6,12 +6,14 @@
 <div>
     {% for task in tasks %}
     <li>
-        <h1>{{task.title}}</h1>
-        <p>{{task.description}}</p>
-        <p>{{task.user.username}}</p>
-        <p>
+        <a href="{% url 'task_detail' task.id %}">
+            <h1>{{task.title}}</h1>
+            <p>{{task.description}}</p>
+            <p>{{task.user.username}}</p>
+        </a>
+        <div>
             <a href="{% url 'delete_task' task.id %}">Delete task</a>
-        </p>
+        </div>
     </li>
     {% endfor %}
 </div>
