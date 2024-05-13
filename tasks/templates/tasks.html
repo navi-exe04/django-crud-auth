@@ -9,6 +9,9 @@
         <h1>{{task.title}}</h1>
         <p>{{task.description}}</p>
         <p>{{task.user.username}}</p>
+        <p>
+            <a href="{% url 'delete_task' task.id %}">Delete task</a>
+        </p>
     </li>
     {% endfor %}
 </div>

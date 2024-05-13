@@ -95,6 +95,18 @@ def create_task(request):
             })
 
 
+def delete_task(request, id):
+    try:
+        # Obtain the task to delete
+        task = Tasks.objects.filter(id=id)
+        task.delete()  # delete the task
+        return redirect('tasks')
+    except Tasks.DoesNotExist:
+        return HttpResponse('La task no existe en la BD')
+    except Exception as e:
+        return HttpResponse('Ocurrio un error')
+
+
 def signout(request):
     # logout session
     logout(request)
