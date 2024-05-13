@@ -7,6 +7,8 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
 # podemos importar la libreria login para que python cree las cookies necesarias en nuestro navegador
 from django.contrib.auth import login, logout, authenticate
+# podemos importar una libreria para requerir de un login para entrar a ciertas vistas
+from django.contrib.auth.decorators import login_required
 # podemos importar los errores que pueda surgir
 from django.db import IntegrityError
 # importamos el form que creamos para crear una task
@@ -59,6 +61,7 @@ def signup(request):
         })
 
 
+@login_required
 def tasks(request):
     """
         Return the tasks view
@@ -72,6 +75,7 @@ def tasks(request):
     })
 
 
+@login_required
 def task_completed(request):
     tasks = Tasks.objects.filter(
         user=request.user,
@@ -82,6 +86,7 @@ def task_completed(request):
     })
 
 
+@login_required
 def create_task(request):
     if request.method == "GET":
         return render(request, 'create_task.html', {
@@ -104,6 +109,7 @@ def create_task(request):
             })
 
 
+@login_required
 def task_detail(request, id):
     # obtain the task from db
     task = get_object_or_404(Tasks, pk=id, user=request.user)
@@ -127,6 +133,7 @@ def task_detail(request, id):
             })
 
 
+@login_required
 def complete_task(request, id):
     task = get_object_or_404(Tasks, pk=id, user=request.user)
     if request.method == 'POST':
@@ -135,6 +142,7 @@ def complete_task(request, id):
         return redirect('tasks')
 
 
+@login_required
 def delete_task(request, id):
     # Obtain the task to delete
     task = get_object_or_404(Tasks, pk=id, user=request.user)
@@ -143,6 +151,7 @@ def delete_task(request, id):
         return redirect('tasks')
 
 
+@login_required
 def signout(request):
     # logout session
     logout(request)

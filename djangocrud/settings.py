@@ -111,6 +111,8 @@ USE_I18N = True
 
 USE_TZ = True
 
+# definimos la ruta del login para que la app los rediriga en caso de no haber iniciado sesion
+LOGIN_URL = '/signin'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
