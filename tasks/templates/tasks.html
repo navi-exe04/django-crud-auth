@@ -1,27 +1,38 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h1>Tasks pending</h1>
-
-<div>
-    {% for task in tasks %}
-    <li>
-        <a href="{% url 'task_detail' task.id %}">
-            <h1>{{task.title}}</h1>
-            <p>{{task.description}}</p>
-            <p>{{task.user.username}}</p>
-        </a>
-        <div>
-            <form action="{% url 'complete_task' task.id %}" method="post">
-                {% csrf_token %}
-                <button>Complete</button>
-            </form>
-            <form action="{% url 'delete_task' task.id %}" method="post">
-                {% csrf_token %}
-                <button>Delete</button>
-            </form>
+<main class="container py-5">
+    <div class="row">
+        <h1 class="display-1 text-center mb-4">Tasks pending</h1>
+        <div class="col-md-6 offset-md-3">
+            <ul class="list-group">
+                {% for task in tasks %}
+                <a class="list-group-item" href="{% url 'task_detail' task.id %}">
+                    <div>
+                        <header class="d-flex justify-content-between align-items-center">
+                            {% if task.important %}
+                            <h2 class="fw-bold text-success">{{task.title}}</h2>
+                            {% else %}
+                            <h2 class="fw-bold">{{task.title}}</h2>
+                            {% endif %}
+                            <p>{{task.user.username}}</p>
+                        </header>
+                        <p>{{task.description}}</p>
+                    </div>
+                    <div class="d-flex justify-content-end">
+                        <form action="{% url 'complete_task' task.id %}" method="post">
+                            {% csrf_token %}
+                            <button class="btn btn-primary mx-2">Complete</button>
+                        </form>
+                        <form action="{% url 'delete_task' task.id %}" method="post">
+                            {% csrf_token %}
+                            <button class="btn btn-danger">Delete</button>
+                        </form>
+                    </div>
+                </a>
+                {% endfor %}
+            </ul>
         </div>
-    </li>
-    {% endfor %}
-</div>
+    </div>
+</main>
 {% endblock %}

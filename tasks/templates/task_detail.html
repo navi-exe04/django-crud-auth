@@ -1,15 +1,24 @@
-{% extends 'base.html'%}
+{% extends 'base.html' %}
 
 {% block content %}
-<h1>
-    Task: {{ task.title }}
-</h1>
-{{ error }}
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button>
-        update
-    </button>
-</form>
+<main class="container py-5">
+    <div class="row">
+        <h1 class="display-3 text-center mb-4">
+            {{ task.title }}
+        </h1>
+        <div class="col-md-4 offset-md-4">
+
+            {{error}}
+
+            <form method="POST" class="card card-body">
+                {% csrf_token %}
+                {{form}}
+
+                <button class="btn btn-primary mt-2">
+                    Update
+                </button>
+            </form>
+        </div>
+    </div>
+</main>
 {% endblock %}
